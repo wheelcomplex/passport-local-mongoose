@@ -3,6 +3,8 @@ const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
+// https://gist.github.com/nikmartin/5902176
+// https://stackoverflow.com/questions/23566555/whats-difference-with-express-session-and-cookie-session
 const session = require('cookie-session');
 const bodyParser = require('body-parser');
 
@@ -17,11 +19,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
+
 app.use(session({keys: ['secretkey1', 'secretkey2', '...']}));
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -38,7 +41,9 @@ passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
 
 // Connect mongoose
-mongoose.connect('mongodb://localhost/passport_local_mongoose_examples', function(err) {
+// "mongodb://admin:CUNFSFOJYOOXZKUH@sl-us-south-1-portal.11.dblayer.com:26050,sl-us-south-1-portal.9.dblayer.com:26050/compose?ssl=true&authSource=admin"
+// mongoose.connect('mongodb://localhost/passport_local_mongoose_examples', function(err) {
+mongoose.connect("mongodb://admin:CUNFSFOJYOOXZKUH@sl-us-south-1-portal.11.dblayer.com:26050,sl-us-south-1-portal.9.dblayer.com:26050/compose?ssl=true&authSource=admin", function(err) {
   if (err) {
     console.log('Could not connect to mongodb on localhost. Ensure that you have mongodb running on localhost and mongodb accepts connections on standard ports!');
   }
@@ -78,5 +83,8 @@ app.use(function(err, req, res, next) {
   });
 });
 
-
-module.exports = app;
+// module.exports = app;
+var listenAddress = "0.0.0.0";
+var listenPort = 3080;
+app.listen(listenPort);
+console.log('server started on http://'+listenAddress+':'+listenPort+'/');
